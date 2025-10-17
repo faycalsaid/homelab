@@ -1,0 +1,31 @@
+services:
+  gluetun:
+    image: "{{ gluetun_docker_image }}:{{ gluetun_docker_image_version }}"
+    container_name: "{{ gluetun_docker_container_name }}"
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - "{{ gluetun_docker_port_qbittorrent_ui }}:{{ gluetun_docker_port_qbittorrent_ui }}" # qbittorrent UI
+      - "{{ gluetun_docker_port_qbittorrent }}:{{ gluetun_docker_port_qbittorrent }}" # qbittorrent
+      - "{{ gluetun_docker_port_qbittorrent_udp }}:{{ gluetun_docker_port_qbittorrent_udp }}/udp" # qbittorrent UDP
+      - "{{ gluetun_docker_port_prowlarr }}:{{ gluetun_docker_port_prowlarr }}" # prowlarr
+      - "{{ gluetun_docker_port_radarr }}:{{ gluetun_docker_port_radarr }}" # radarr
+      - "{{ gluetun_docker_port_sonarr }}:{{ gluetun_docker_port_sonarr }}" # sonarr
+      - "{{ gluetun_docker_port_flaresolverr }}:{{ gluetun_docker_port_flaresolverr }}" # flaresolverr
+    volumes:
+      - "{{ gluetun_directory }}:/gluetun"
+    environment:
+      - VPN_SERVICE_PROVIDER="{{ gluetun_vpn_service_provider }}"
+      - VPN_TYPE="{{ gluetun_vpn_type }}"
+{% if gluetun_vpn_type | lower == "wireguard" %}
+      - WIREGUARD_PRIVATE_KEY={{ gluetun_vpn_wireguard_private_key }}
+      - WIREGUARD_ADDRESSES={{ gluetun_vpn_wireguard_addresses }}
+{% endif %}
+      # Timezone for accurate log times
+      - TZ=Etc/UTC
+      # Server list updater
+      # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/servers.md#update-the-vpn-servers-list
+      - UPDATER_PERIOD=24h
+    restart: unless-stopped

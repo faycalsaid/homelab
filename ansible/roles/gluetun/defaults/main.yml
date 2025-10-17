@@ -1,0 +1,22 @@
+# Gluetun Docker container settings
+gluetun_docker_container_name: gluetun
+gluetun_docker_image: qmcgaw/gluetun
+gluetun_docker_image_version: latest
+
+# Gluetun Docker container ports
+gluetun_docker_port_qbittorrent_ui: 8081
+gluetun_docker_port_qbittorrent: 6881
+gluetun_docker_port_qbittorrent_udp: 6881
+gluetun_docker_port_prowlarr: 9696
+gluetun_docker_port_radarr: 7878
+gluetun_docker_port_sonarr: 8989
+gluetun_docker_port_flaresolverr: 8191
+
+# Gluetun volume
+gluetun_directory: /opt/gluetun
+
+# Gluetun VPN settings
+gluetun_vpn_wireguard_addresses:
+gluetun_vpn_service_provider:
+gluetun_vpn_type:
+gluetun_vpn_wireguard_private_key:

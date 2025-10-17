@@ -1,0 +1,2 @@
+docker_version: "*.*.*" # Latest major, minor and patch version of Docker CE
+docker_sudo_users: []
