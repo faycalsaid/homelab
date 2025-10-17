@@ -1,0 +1,23 @@
+# - name: Configure bastion servers
+#   hosts: bastion-servers
+#   become: true
+#   roles:
+#     - role: apt
+#     - role: install-docker
+#     - role: wireguard
+
+- name: Configure media servers
+  hosts: media-servers
+  become: true
+  pre_tasks:
+    - name: Load evaluated group vars (to resolve Jinja expressions)
+      include_vars:
+        file: "{{ inventory_dir }}/group_vars/media-servers.yml"
+  roles:
+#     - role: apt
+    - role: install-docker
+    - role: gluetun
+#     - role: arr-radarr
+#     - role: arr-sonarr
+#     - role: arr-prowlarr
+#     - role: arr-qbittorrent

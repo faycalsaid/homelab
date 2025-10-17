@@ -1,0 +1,1 @@
+__gluetun_compose_path: "{{ gluetun_directory }}/docker-compose.yml"

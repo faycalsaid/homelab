@@ -3,6 +3,6 @@
   become: true
 
   roles:
-    - role: docker
+    - role: install-docker
       docker_sudo_users:
         - feycce

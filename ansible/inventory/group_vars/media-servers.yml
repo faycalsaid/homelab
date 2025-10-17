@@ -1,0 +1,33 @@
+# Everything related to the arr stack
+
+# gluetun variables
+gluetun_docker_port_qbittorrent_ui: "{{ radarr_docker_port }}"
+gluetun_docker_port_qbittorrent: "{{ qbittorrent_docker_port }}"
+gluetun_docker_port_qbittorrent_udp: "{{ qbittorrent_docker_port_udp }}"
+gluetun_docker_port_prowlarr: "{{ prowlarr_docker_port }}"
+gluetun_docker_port_radarr: "{{ radarr_docker_port }}"
+gluetun_docker_port_sonarr: "{{ sonarr_docker_port }}"
+gluetun_docker_port_flaresolverr: "{{ flaresolverr_docker_port }}"
+
+## VPN configuration
+gluetun_vpn_service_provider: mullvad
+gluetun_vpn_type: wireguard
+gluetun_vpn_wireguard_addresses: 10.64.34.155/32
+gluetun_vpn_wireguard_private_key: 6H1t+cNq4Bct1A5ZMPG2ZmFILBUeYzYH2ohgHq1p9l4=
+
+# radarr variable
+radarr_docker_port: 7878
+
+# sonarr variable
+sonarr_docker_port: 8989
+
+# prowlarr variable
+prowlarr_docker_port: 9696
+
+# qbittorrent variable
+qbittorrent_docker_port_ui: 8081
+qbittorrent_docker_port: 6881
+qbittorrent_docker_port_udp: 6881
+
+# flaresolverr variable
+flaresolverr_docker_port: 8191
