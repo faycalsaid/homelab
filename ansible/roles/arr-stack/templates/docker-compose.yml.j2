@@ -1,0 +1,77 @@
+services:
+{% if arr_stack_radarr_enabled %}
+  radarr:
+    image: "{{ arr_stack_radarr_docker_image }}:{{ arr_stack_radarr_docker_image_version }}"
+    container_name: "{{ arr_stack_radarr_docker_container_name }}"
+    environment:
+      - PUID="{{ arr_stack_media_user_puid }}"
+      - PGID="{{ arr_stack_media_user_pgid }}"
+      - TZ="{{ arr_stack_timezone }}"
+    volumes:
+      - "{{ arr_stack_radarr_host_configuration_dir }}:{{ arr_stack_radarr_docker_container_configuration_dir }}"
+      - "{{ arr_stack_host_shared_data_dir }}:{{ arr_stack_container_data_volume_path }}"
+{% if arr_stack_use_vpn_routing %}
+    network_mode: "container:{{ arr_stack_vpn_container_name }}"
+{% endif %}
+    restart: unless-stopped
+{% endif %}
+
+{% if arr_stack_sonarr_enabled %}
+  sonarr:
+    image: "{{ arr_stack_sonarr_docker_image }}:{{ arr_stack_sonarr_docker_image_version }}"
+    container_name: "{{ arr_stack_sonarr_docker_container_name }}"
+    environment:
+      - PUID="{{ arr_stack_media_user_puid }}"
+      - PGID="{{ arr_stack_media_user_pgid }}"
+      - TZ="{{ arr_stack_timezone }}"
+    volumes:
+      - "{{ arr_stack_sonarr_host_configuration_dir }}:{{ arr_stack_sonarr_docker_container_configuration_dir }}"
+      - "{{ arr_stack_host_shared_data_dir }}:{{ arr_stack_container_data_volume_path }}"
+{% if arr_stack_use_vpn_routing %}
+    network_mode: "container:{{ arr_stack_vpn_container_name }}"
+{% endif %}
+    restart: unless-stopped
+{% endif %}
+
+{% if arr_stack_prowlarr_enabled %}
+  prowlarr:
+    image: "{{ arr_stack_prowlarr_docker_image }}:{{ arr_stack_prowlarr_docker_image_version }}"
+    container_name: "{{ arr_stack_prowlarr_docker_container_name }}"
+    environment:
+      - PUID="{{ arr_stack_media_user_puid }}"
+      - PGID="{{ arr_stack_media_user_pgid }}"
+      - TZ="{{ arr_stack_timezone }}"
+    volumes:
+      - "{{ arr_stack_prowlarr_host_configuration_dir }}:{{ arr_stack_prowlarr_docker_container_configuration_dir }}"
+{% if arr_stack_use_vpn_routing %}
+    network_mode: "container:{{ arr_stack_vpn_container_name }}"
+{% endif %}
+    restart: unless-stopped
+{% endif %}
+
+{% if arr_stack_flaresolverr_enabled %}
+  flaresolverr:
+    image: "{{ arr_stack_flaresolverr_docker_image }}:{{ arr_stack_flaresolverr_docker_image_version }}"
+    container_name: "{{ arr_stack_flaresolverr_docker_container_name }}"
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ="{{ arr_stack_timezone }}"
+{% if arr_stack_use_vpn_routing %}
+    network_mode: "container:{{ arr_stack_vpn_container_name }}"
+{% endif %}
+    restart: unless-stopped
+{% endif %}
+
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Europe/Paris
+    ports:
+      - 5055:5055
+    volumes:
+      - /opt/media/jellyseerr/config:/config
+    restart: unless-stopped

@@ -1,0 +1,1 @@
+__arr_stack_compose_path: "{{ arr_stack_host_dir }}/docker-compose.yml"

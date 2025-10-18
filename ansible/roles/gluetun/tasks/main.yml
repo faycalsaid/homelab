@@ -1,8 +1,3 @@
-- name: Ensure arr_stack network exists or created to make arr trafic pass through it
-  community.docker.docker_network:
-    name: arr_stack
-    state: present
-
 - name: Render docker-compose file for gluetun
   template:
     src: docker-compose.yml.j2

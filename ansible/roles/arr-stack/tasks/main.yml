@@ -1,0 +1,32 @@
+- name: Ensure media user is present
+  ansible.builtin.user:
+    name: "{{ arr_stack_media_user }}"
+    uid: "{{ arr_stack_media_user_puid }}"
+    group: "{{ arr_stack_media_user_pgid }}"
+    create_home: yes
+    shell: /bin/bash
+
+- name: Create necessary directories for ARR services
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ arr_stack_media_user }}"
+    group: "{{ arr_stack_media_user }}"
+    mode: "0755"
+  loop: "{{ arr_stack_directories }}"
+  when: arr_stack_directories | length > 0
+
+
+- name: Render docker-compose file for arr-stack
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ __arr_stack_compose_path }}"
+    owner: root
+    mode: '0644'
+  register: compose_template
+
+- name: Ensure compose project is up
+  community.docker.docker_compose_v2:
+    project_src: "{{ arr_stack_host_dir }}"
+    state: present
+  when: compose_template.changed
