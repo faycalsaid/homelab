@@ -1,0 +1,5 @@
+pve_host     = "192.168.1.151"
+pve_user     = "terraform-ssh"
+pve_password = "example"
+
+server_admin_public_key    = "ssh-ed25519 AAAAC3N---------------------------------wM277 john.doe"

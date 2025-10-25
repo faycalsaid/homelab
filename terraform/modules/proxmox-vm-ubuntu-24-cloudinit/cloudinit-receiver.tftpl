@@ -1,0 +1,27 @@
+#cloud-config
+users:
+  - name: serveradmin
+    gecos: Ansible Automation
+    shell: /bin/bash
+    groups: [sudo]
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_authorized_keys:
+      - ${server_admin_public_key}
+  - name: ansible
+    gecos: Ansible Automation
+    shell: /bin/bash
+    groups: [sudo]
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_authorized_keys:
+      - ${server_admin_public_key}
+      - ${ansible_public_key} # Only gets the public key
+
+package_update: true
+packages:
+  - python3
+  - qemu-guest-agent
+
+runcmd:
+  - install -d -m 0700 -o ansible -g ansible /home/ansible/.ssh
+  - systemctl enable --now qemu-guest-agent
+  - timedatectl set-timezone Etc/UTC
