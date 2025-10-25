@@ -1,0 +1,53 @@
+#cloud-config
+users:
+  - name: serveradmin
+    gecos: Ansible Automation
+    shell: /bin/bash
+    groups: [sudo]
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_authorized_keys:
+      - ${server_admin_public_key}
+  - name: ansible
+    gecos: Ansible Automation
+    shell: /bin/bash
+    groups: [sudo]
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_authorized_keys:
+      - ${ansible_public_key}
+
+write_files:
+  - path: /home/ansible/.ssh/id_ed25519
+    permissions: "0600"
+    # Takes your key and, for every newline (\n) it finds, it replaces it with a newline followed by 6 spaces.
+    content: |
+      ${replace(ansible_private_key, "\n", "\n      ")}
+
+  - path: /home/ansible/.ssh/config
+    permissions: "0644"
+    content: |
+      Host *
+        StrictHostKeyChecking no
+        User ansible
+
+package_update: true
+packages:
+  - python3
+  - python3-pip
+  - git
+  - qemu-guest-agent
+
+runcmd:
+  # Make sure the .ssh directory exists and has correct permissions
+  - install -d -m 0700 -o ansible -g ansible /home/ansible/.ssh
+  # Now, set ownership on the files you wrote
+  - chown ansible:ansible /home/ansible/.ssh/id_ed25519
+  - chown ansible:ansible /home/ansible/.ssh/config
+  # Initialize and enable the QEMU Guest Agent
+  - systemctl enable --now qemu-guest-agent
+  # Upgrade pip and install Ansible Core
+  - python3 -m pip install --upgrade pip
+  - PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install --upgrade ansible-core
+  - mkdir -p /home/ansible/.ansible/tmp
+  - chown -R ansible:ansible /home/ansible/.ansible
+  - chmod 700 /home/ansible/.ansible/tmp
+  - timedatectl set-timezone Etc/UTC

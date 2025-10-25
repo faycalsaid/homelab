@@ -1,0 +1,15 @@
+# .gitignore
+
+# Terraform secret files
+terraform.tfvars
+*.auto.tfvars
+
+# Terraform state files (also contain secrets!)
+terraform.tfstate
+terraform.tfstate.backup
+
+# Crash logs
+crash.log
+
+# Local Terraform directories
+.terraform/
