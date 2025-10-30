@@ -1,29 +1,22 @@
+# Repository structure
+- `ansible/`: Ansible playbooks and roles to configure the homelab services and applications
+- `terraform/`: Terraform configurations to create and manage the Proxmox VMs, networks, and storage
+- `.proxmox/`: Documentation related to Proxmox VM templates and cloud-init setup and configuration
 
+# Disaster Recovery - Bootstrap everything from scratch
 
-# Disaster Recovery
-
-# Bootstrap everything from scratch
 ## Prerequisites
-- VMs with Ubuntu 22.04 installed
-- SSH access to the VMs
-- Ansible installed on your local machine, the following instructions are for Ubuntu/Debian based systems (See Developer Guide section for more details)
-- Luanch the following command with the appropriate user
+- Proxmox server up and running
 
-```bash
-ansible-playbook ./playbooks/site.yml --user <appropriate-user> --ask-pass --ask-become-pass 
-```
+- Create the infrastrucutre (VMs, networks, storage) by following the instructions in the terraform disaster recovery readme [here](./terraform/README.md)
 
-Configure proxmox
+- SSH to the bastion vm using the ansible user, pull the homelab repository, and run the ansible playbook from there
 
-Create the infrastrucutre (VMs, networks, storage) by following the instructions in the terraform disaster recovery readme [here](./terraform/README.md)
+    ```bash
+    ansible-playbook ./playbooks/site.yml --ask-vault-pass
+    ```
 
-SSH to the bastion vm using the ansible user, pull the homelab repository, and run the ansible playbook from there
-
-```bash
-ansible-playbook ./playbooks/site.yml --ask-vault-pass
-```
-
-Configure arr applications through UI (The configuration as code is not yet implemented)
+- Configure arr applications through UI (The configuration as code is not yet implemented)
 
 ## Troubleshooting
 - If you have the error when clongin the repo:
