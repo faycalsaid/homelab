@@ -64,14 +64,47 @@ services:
     restart: unless-stopped
 {% endif %}
 
+{% if arr_stack_jellyseer_enabled %}
   jellyseerr:
-    image: fallenbagel/jellyseerr:latest
-    container_name: jellyseerr
+    image: "{{ arr_stack_jellyseerr_docker_image }}:{{ arr_stack_jellyseerr_docker_image_version }}"
+    container_name: "{{ arr_stack_jellyseerr_docker_container_name }}"
     environment:
       - LOG_LEVEL=debug
       - TZ=Europe/Paris
     ports:
       - 5055:5055
     volumes:
-      - /opt/media/jellyseerr/config:/config
+      - "{{ arr_stack_jellyseerr_host_configuration_dir }}:{{ arr_stack_jellyseerr_docker_container_configuration_dir }}"
     restart: unless-stopped
+{% endif %}
+
+{% if arr_stack_jellyfin_enabled %}
+  jellyfin:
+    image: "{{ arr_stack_jellyfin_docker_image }}:{{ arr_stack_jellyfin_docker_image_version }}"
+    container_name: "{{ arr_stack_jellyfin_docker_container_name }}"
+    user: "{{ arr_stack_media_user_puid }}:{{ arr_stack_media_user_pgid }}"
+    ports:
+      - 8096:8096
+    volumes:
+      - /opt/jellyfin/config:/config
+      - /opt/jellyfin/cache:/cache
+      - /opt/data/media:/data/media
+    restart: 'unless-stopped'
+{% endif %}
+
+{% if arr_stack_qbittorrent_enabled %}
+  qbittorrent:
+    image: "{{ arr_stack_qbittorrent_docker_image }}:{{ arr_stack_qbittorrent_docker_image_version }}"
+    container_name: "{{ arr_stack_qbittorrent_docker_container_name }}"
+    environment:
+      - PUID="{{ arr_stack_media_user_puid }}"
+      - PGID="{{ arr_stack_media_user_pgid }}"
+      - TZ=Etc/UTC
+      - WEBUI_PORT=8081
+      - TORRENTING_PORT=6881
+    volumes:
+      - /opt/qbittorrent:/config
+      - /opt/data/torrents:/data/torrents
+    network_mode: "container:gluetun"
+    restart: unless-stopped
+{% endif %}

@@ -4,5 +4,3 @@
 
   roles:
     - role: install-docker
-      docker_sudo_users:
-        - feycce

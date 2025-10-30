@@ -13,3 +13,14 @@
 ansible-playbook ./playbooks/site.yml --user <appropriate-user> --ask-pass --ask-become-pass 
 ```
 
+Configure proxmox
+
+Create the infrastrucutre (VMs, networks, storage) by following the instructions in the terraform disaster recovery readme [here](./terraform/README.md)
+
+SSH to the bastion vm using the and run the ansible playbook from there
+
+```bash
+ansible-playbook ./playbooks/site.yml
+```
+
+Configure arr applications through UI (The configuration as code is not yet implemented)

@@ -1,0 +1,2 @@
+base_storage_device: "/dev/sdb"
+base_storage_mount_point: "/mnt/storage"

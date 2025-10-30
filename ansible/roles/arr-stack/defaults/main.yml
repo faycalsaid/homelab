@@ -17,6 +17,8 @@ arr_stack_directories: >
     + ([arr_stack_sonarr_host_configuration_dir] if arr_stack_sonarr_enabled else [])
     + ([arr_stack_sonarr_shows_dir] if arr_stack_sonarr_enabled else [])
     + ([arr_stack_prowlarr_host_configuration_dir] if arr_stack_prowlarr_enabled else [])
+    + ([arr_stack_jellyseer_host_configuration_dir] if arr_stack_jellyseer_enabled else [])
+    + ([arr_stack_qbittorrent_download_dir] if arr_stack_qbittorrent_enabled else [])
     + ([arr_stack_host_shared_data_dir] if (
           arr_stack_radarr_enabled
           or arr_stack_sonarr_enabled
@@ -58,3 +60,23 @@ arr_stack_flaresolverr_docker_image_version: latest
 
 # jellyseer:
 arr_stack_jellyseer_enabled: false
+arr_stack_jellyseer_docker_container_name: jellyseerr
+arr_stack_jellyseer_docker_image: fallenbagel/jellyseerr
+arr_stack_jellyseer_docker_image_version: latest
+arr_stack_jellyseer_host_configuration_dir: "{{ arr_stack_host_dir }}/jellyseer/"
+arr_stack_jellyseer_docker_container_configuration_dir: /config
+
+# jellyfin:
+arr_stack_jellyfin_enabled: false
+arr_stack_jellyfin_docker_container_name: jellyfin
+arr_stack_jellyfin_docker_image: jellyfin/jellyfin
+arr_stack_jellyfin_docker_image_version: latest
+
+# qbittorrent
+arr_stack_qbittorrent_enabled: false
+arr_stack_qbittorrent_docker_container_name: qbittorrent
+arr_stack_qbittorrent_docker_image: lscr.io/linuxserver/qbittorrent
+arr_stack_qbittorrent_docker_image_version: latest
+arr_stack_qbittorrent_download_dir: "{{ arr_stack_host_shared_data_dir }}/downloads"
+arr_stack_qbittorrent_host_configuration_dir: "{{ arr_stack_host_dir }}/qbittorrent/"
+arr_stack_qbittorrent_docker_container_configuration_dir: /config

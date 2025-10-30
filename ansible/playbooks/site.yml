@@ -1,23 +1,24 @@
-# - name: Configure bastion servers
-#   hosts: bastion-servers
-#   become: true
-#   roles:
-#     - role: apt
-#     - role: install-docker
-#     - role: wireguard
+- name: Load all group vars with Jinja interpolation
+  hosts: all
+  gather_facts: false
+  pre_tasks:
+    - name: Evaluate all group_vars for this host
+      include_vars:
+        dir: "{{ inventory_dir }}/inventory/group_vars"
+        ignore_unknown_extensions: true
+      tags: always
+
+- name: Configure bastion servers
+  hosts: bastion-servers
+  become: true
+  roles:
+    - role: install-docker
 
 - name: Configure media servers
   hosts: media-servers
   become: true
-  pre_tasks:
-    - name: Load evaluated group vars (to resolve Jinja expressions)
-      include_vars:
-        file: "{{ inventory_dir }}/group_vars/media-servers.yml"
   roles:
-#     - role: apt
+    - role: base-storage
     - role: install-docker
     - role: gluetun
-#     - role: arr-radarr
-#     - role: arr-sonarr
-#     - role: arr-prowlarr
-#     - role: arr-qbittorrent
+    - role: arr-stack

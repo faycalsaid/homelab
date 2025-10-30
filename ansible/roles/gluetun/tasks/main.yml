@@ -1,3 +1,9 @@
+- name: Create necessary directories for gluetun
+  ansible.builtin.file:
+    path: "{{ gluetun_directory }}"
+    state: directory
+    mode: "0755"
+
 - name: Render docker-compose file for gluetun
   template:
     src: docker-compose.yml.j2

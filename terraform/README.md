@@ -3,7 +3,7 @@
 This document explains how to use Terraform to provision VMs on Proxmox using the Cloud-Init template created previously.
 
 **Prerequisites:** You must first set up Proxmox with a Cloud-Init template and optional external storage as described in
-README-Proxmox.md
+[README-Proxmox.md](https://github.com/faycalsaid/homelab/blob/e39d4cbc7accd2daa5890476dc8184207473a2c9/proxmox/README-Proxmox.mds)
 Without that step, Terraform cannot clone VMs automatically.
 
 1. Initialize Your Terraform Project

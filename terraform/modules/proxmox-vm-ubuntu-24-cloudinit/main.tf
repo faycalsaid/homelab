@@ -84,8 +84,8 @@ resource "proxmox_vm_qemu" "vm-cloudinit" {
           size = var.disk_size
         }
       }
-      # Only add an extra disk if both storage and size are providede
       dynamic "scsi1" {
+        # Only add an extra disk if both storage and size are provided
         for_each = var.extra_disk_storage != null && var.extra_disk_size != null ? [1] : []
         content {
           disk {
@@ -95,6 +95,7 @@ resource "proxmox_vm_qemu" "vm-cloudinit" {
         }
       }
     }
+
     ide {
       # Some images require a cloud-init disk on the IDE controller, others on the SCSI or SATA controller
       # Here we do like the template

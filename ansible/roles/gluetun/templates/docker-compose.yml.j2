@@ -7,13 +7,9 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     ports:
-      - "{{ gluetun_docker_port_qbittorrent_ui }}:{{ gluetun_docker_port_qbittorrent_ui }}" # qbittorrent UI
-      - "{{ gluetun_docker_port_qbittorrent }}:{{ gluetun_docker_port_qbittorrent }}" # qbittorrent
-      - "{{ gluetun_docker_port_qbittorrent_udp }}:{{ gluetun_docker_port_qbittorrent_udp }}/udp" # qbittorrent UDP
-      - "{{ gluetun_docker_port_prowlarr }}:{{ gluetun_docker_port_prowlarr }}" # prowlarr
-      - "{{ gluetun_docker_port_radarr }}:{{ gluetun_docker_port_radarr }}" # radarr
-      - "{{ gluetun_docker_port_sonarr }}:{{ gluetun_docker_port_sonarr }}" # sonarr
-      - "{{ gluetun_docker_port_flaresolverr }}:{{ gluetun_docker_port_flaresolverr }}" # flaresolverr
+{% for port in gluetun_extra_ports %}
+      - "{{ port }}"
+{% endfor %}
     volumes:
       - "{{ gluetun_directory }}:/gluetun"
     environment:

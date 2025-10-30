@@ -2,11 +2,17 @@
 
 ## Developer Guide
 
+Install ansible-core
+
 ```bash pip install --upgrade ansible-core```
 
-to test for example saying you have a VM part of ubuntu group with IP or domain name defined in your hosts file
+Install required collections, and if you add any new collection add it to requirements.yml
 
-You need to install python manually on the VMs until they are provided using terraform with pyhton installed
+```bash
+ansible-galaxy collection install -r requirements.yml
+```
+
+to test for example saying you have a VM part of ubuntu group with IP or domain name defined in your hosts file
 
 Test this command if you want to ping the VM
 
@@ -15,8 +21,15 @@ ansible -i ./inventory/hosts ubuntu -m ping --user someuser --ask-pass
 To run a playbook for example
 
 ```bash 
-  ansible-playbook ./playbooks/apt.yml --user feycce --ask-pass --ask-become-pass -i ./inventory/hosts 
+  ansible-playbook ./playbooks/docker.yml --user someuser --ask-pass --ask-become-pass -i ./inventory/hosts 
 ```
+
+But here our VMs are configured to use ssh so just run 
+
+```bash 
+  ansible-playbook ./playbooks/site.yml
+```
+
 
 ## 🧩 Special Notes
 

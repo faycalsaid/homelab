@@ -4,13 +4,7 @@ gluetun_docker_image: qmcgaw/gluetun
 gluetun_docker_image_version: latest
 
 # Gluetun Docker container ports
-gluetun_docker_port_qbittorrent_ui: 8081
-gluetun_docker_port_qbittorrent: 6881
-gluetun_docker_port_qbittorrent_udp: 6881
-gluetun_docker_port_prowlarr: 9696
-gluetun_docker_port_radarr: 7878
-gluetun_docker_port_sonarr: 8989
-gluetun_docker_port_flaresolverr: 8191
+gluetun_extra_ports: []
 
 # Gluetun volume
 gluetun_directory: /opt/gluetun

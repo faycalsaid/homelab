@@ -16,7 +16,6 @@
   loop: "{{ arr_stack_directories }}"
   when: arr_stack_directories | length > 0
 
-
 - name: Render docker-compose file for arr-stack
   template:
     src: docker-compose.yml.j2
