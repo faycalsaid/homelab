@@ -30,7 +30,6 @@ But here our VMs are configured to use ssh so just run
   ansible-playbook ./playbooks/site.yml
 ```
 
-
 ## 🧩 Special Notes
 
 Although this repository follows standard Ansible conventions for group_vars and host_vars,

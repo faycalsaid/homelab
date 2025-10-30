@@ -4,7 +4,7 @@
   pre_tasks:
     - name: Evaluate all group_vars for this host
       include_vars:
-        dir: "{{ inventory_dir }}/inventory/group_vars"
+        dir: "{{ inventory_dir }}/group_vars"
         ignore_unknown_extensions: true
       tags: always
 
