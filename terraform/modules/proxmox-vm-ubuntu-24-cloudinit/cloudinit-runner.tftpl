@@ -1,7 +1,7 @@
 #cloud-config
 users:
   - name: serveradmin
-    gecos: Ansible Automation
+    gecos: Server Administrator
     shell: /bin/bash
     groups: [sudo]
     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
@@ -14,6 +14,7 @@ users:
     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
     ssh_authorized_keys:
       - ${ansible_public_key}
+      - ${server_admin_public_key}
 
 write_files:
   - path: /home/ansible/.ssh/id_ed25519
@@ -37,17 +38,25 @@ packages:
   - qemu-guest-agent
 
 runcmd:
-  # Make sure the .ssh directory exists and has correct permissions
+  # Ensure home + .ssh exists before key write
   - install -d -m 0700 -o ansible -g ansible /home/ansible/.ssh
-  # Now, set ownership on the files you wrote
-  - chown ansible:ansible /home/ansible/.ssh/id_ed25519
-  - chown ansible:ansible /home/ansible/.ssh/config
+
+  # Fix ownership of ansible HOME recursively (including previously ssh created files)
+  - chown -R ansible:ansible /home/ansible
+  - chmod 700 /home/ansible/.ssh
+  - chmod 600 /home/ansible/.ssh/*
+
   # Initialize and enable the QEMU Guest Agent
   - systemctl enable --now qemu-guest-agent
-  # Upgrade pip and install Ansible Core
+
+  # Upgrade pip & install Ansible Core
   - python3 -m pip install --upgrade pip
   - PIP_BREAK_SYSTEM_PACKAGES=1 python3 -m pip install --upgrade ansible-core
+
+  # Ensure Ansible tmp dir exists & owned correctly
   - mkdir -p /home/ansible/.ansible/tmp
   - chown -R ansible:ansible /home/ansible/.ansible
   - chmod 700 /home/ansible/.ansible/tmp
+
+  # Set server timezone
   - timedatectl set-timezone Etc/UTC

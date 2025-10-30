@@ -1,0 +1,87 @@
+# VPN container
+arr_stack_use_vpn_routing: false
+arr_stack_vpn_container_name:
+
+# Shared settings
+arr_stack_host_dir: /opt/arr-stack
+arr_stack_host_shared_data_dir: /opt/data/media
+arr_stack_container_data_volume_path: /data
+arr_stack_media_user: "media"
+arr_stack_media_user_puid: 1000
+arr_stack_media_user_pgid: 1000
+arr_stack_timezone: "Etc/UTC"
+arr_stack_directories: >
+  {{
+    ([arr_stack_radarr_host_configuration_dir] if arr_stack_radarr_enabled else [])
+    + ([arr_stack_radarr_movies_dir] if arr_stack_radarr_enabled else [])
+    + ([arr_stack_sonarr_host_configuration_dir] if arr_stack_sonarr_enabled else [])
+    + ([arr_stack_sonarr_shows_dir] if arr_stack_sonarr_enabled else [])
+    + ([arr_stack_prowlarr_host_configuration_dir] if arr_stack_prowlarr_enabled else [])
+    + ([arr_stack_jellyfin_host_configuration_dir] if arr_stack_jellyfin_enabled else [])
+    + ([arr_stack_jellyfin_host_cache_dir] if arr_stack_jellyfin_enabled else [])
+    + ([arr_stack_jellyseerr_host_configuration_dir] if arr_stack_jellyseerr_enabled else [])
+    + ([arr_stack_qbittorrent_download_dir] if arr_stack_qbittorrent_enabled else [])
+    + ([arr_stack_host_shared_data_dir] if (
+          arr_stack_radarr_enabled
+          or arr_stack_sonarr_enabled
+          or arr_stack_prowlarr_enabled
+      ) else [])
+  }}
+
+# radarr
+arr_stack_radarr_enabled: false
+arr_stack_radarr_docker_container_name: radarr
+arr_stack_radarr_docker_image: lscr.io/linuxserver/radarr
+arr_stack_radarr_docker_image_version: latest
+arr_stack_radarr_host_configuration_dir: "{{ arr_stack_host_dir }}/radarr/"
+arr_stack_radarr_docker_container_configuration_dir: /config
+arr_stack_radarr_movies_dir: "{{ arr_stack_host_shared_data_dir }}/movies"
+
+# sonarr
+arr_stack_sonarr_enabled: false
+arr_stack_sonarr_docker_container_name: sonarr
+arr_stack_sonarr_docker_image: lscr.io/linuxserver/sonarr
+arr_stack_sonarr_docker_image_version: latest
+arr_stack_sonarr_host_configuration_dir: "{{ arr_stack_host_dir }}/sonarr/"
+arr_stack_sonarr_docker_container_configuration_dir: /config
+arr_stack_sonarr_shows_dir: "{{ arr_stack_host_shared_data_dir }}/shows"
+
+# prowlarr
+arr_stack_prowlarr_enabled: false
+arr_stack_prowlarr_docker_container_name: prowlarr
+arr_stack_prowlarr_docker_image: lscr.io/linuxserver/prowlarr
+arr_stack_prowlarr_docker_image_version: latest
+arr_stack_prowlarr_host_configuration_dir: "{{ arr_stack_host_dir }}/prowlarr/"
+arr_stack_prowlarr_docker_container_configuration_dir: /config
+
+# flaresolverr
+arr_stack_flaresolverr_enabled: false
+arr_stack_flaresolverr_docker_container_name: flaresolverr
+arr_stack_flaresolverr_docker_image: ghcr.io/flaresolverr/flaresolverr
+arr_stack_flaresolverr_docker_image_version: latest
+
+# jellyseerr:
+arr_stack_jellyseerr_enabled: false
+arr_stack_jellyseerr_docker_container_name: jellyseerr
+arr_stack_jellyseerr_docker_image: fallenbagel/jellyseerr
+arr_stack_jellyseerr_docker_image_version: latest
+arr_stack_jellyseerr_host_configuration_dir: "{{ arr_stack_host_dir }}/jellyseerr/"
+arr_stack_jellyseerr_docker_container_configuration_dir: /config
+
+# jellyfin:
+arr_stack_jellyfin_enabled: false
+arr_stack_jellyfin_docker_container_name: jellyfin
+arr_stack_jellyfin_docker_image: jellyfin/jellyfin
+arr_stack_jellyfin_docker_image_version: latest
+arr_stack_jellyfin_host_configuration_dir: "{{ arr_stack_host_dir }}/jellyfin/config"
+arr_stack_jellyfin_host_cache_dir: "{{ arr_stack_host_dir }}/jellyfin/cache"
+arr_stack_jellyfin_media_dir: "{{ arr_stack_host_shared_data_dir }}"
+
+# qbittorrent
+arr_stack_qbittorrent_enabled: false
+arr_stack_qbittorrent_docker_container_name: qbittorrent
+arr_stack_qbittorrent_docker_image: lscr.io/linuxserver/qbittorrent
+arr_stack_qbittorrent_docker_image_version: latest
+arr_stack_qbittorrent_download_dir: "{{ arr_stack_host_shared_data_dir }}/downloads"
+arr_stack_qbittorrent_host_configuration_dir: "{{ arr_stack_host_dir }}/qbittorrent/"
+arr_stack_qbittorrent_docker_container_configuration_dir: /config

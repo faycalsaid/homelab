@@ -1,0 +1,23 @@
+- name: Create filesystem if not exists
+  filesystem:
+    fstype: "{{ __base_storage_filesystem }}"
+    dev: "{{ base_storage_device }}"
+
+- name: Ensure mount directory exists
+  file:
+    path: "{{ base_storage_mount_point }}"
+    state: directory
+
+- name: Mount the disk
+  mount:
+    path: "{{ base_storage_mount_point }}"
+    src: "{{ base_storage_device }}"
+    fstype: "{{ __base_storage_filesystem }}"
+    state: mounted
+
+- name: Persist in fstab
+  mount:
+    path: "{{ base_storage_mount_point }}"
+    src: "{{ base_storage_device }}"
+    fstype: "{{ __base_storage_filesystem }}"
+    state: present

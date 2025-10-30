@@ -1,0 +1,4 @@
+server_admin_user: serveradmin
+
+docker_sudo_users:
+  - "{{ server_admin_user }}"
