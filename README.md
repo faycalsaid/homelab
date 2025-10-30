@@ -20,7 +20,7 @@ Create the infrastrucutre (VMs, networks, storage) by following the instructions
 SSH to the bastion vm using the ansible user, pull the homelab repository, and run the ansible playbook from there
 
 ```bash
-ansible-playbook ./playbooks/site.yml
+ansible-playbook ./playbooks/site.yml --ask-vault-pass
 ```
 
 Configure arr applications through UI (The configuration as code is not yet implemented)

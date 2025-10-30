@@ -30,6 +30,13 @@ But here our VMs are configured to use ssh so just run
   ansible-playbook ./playbooks/site.yml
 ```
 
+### Vault and unvault secrets
+To encrypt secrets use ansible-vault
+```bash
+ansible-vault encrypt_string --ask-vault-pass "some string" --name property_name
+```
+
+
 ## 🧩 Special Notes
 
 Although this repository follows standard Ansible conventions for group_vars and host_vars,
