@@ -1,11 +1,4 @@
 terraform {
-  backend "remote" {
-    organization = "feycce-homelab"
-    workspaces {
-      name = "homelab-test"
-    }
-  }
-
   required_providers {
     proxmox = {
       source  = "Telmate/proxmox"

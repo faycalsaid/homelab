@@ -86,9 +86,9 @@ services:
     ports:
       - 8096:8096
     volumes:
-      - /opt/jellyfin/config:/config
-      - /opt/jellyfin/cache:/cache
-      - /opt/data/media:/data/media
+      - "{{ arr_stack_jellyfin_host_configuration_dir }}:/config"
+      - "{{ arr_stack_jellyfin_host_cache_dir }}:/cache"
+      - "{{ arr_stack_jellyfin_media_dir }}:/data/media"
     restart: 'unless-stopped'
 {% endif %}
 

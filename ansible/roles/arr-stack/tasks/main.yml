@@ -1,8 +1,14 @@
+- name: Ensure media group exists
+  ansible.builtin.group:
+    name: media
+    gid: "{{ arr_stack_media_user_pgid }}"
+    state: present
+
 - name: Ensure media user is present
   ansible.builtin.user:
     name: "{{ arr_stack_media_user }}"
     uid: "{{ arr_stack_media_user_puid }}"
-    group: "{{ arr_stack_media_user_pgid }}"
+    group: media
     create_home: yes
     shell: /bin/bash
 

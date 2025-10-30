@@ -4,7 +4,7 @@ base_storage_mount_point: /opt/data
 # gluetun variables
 gluetun_docker_container_name: gluetun
 
-gluetun_default_ports:
+gluetun_extra_ports:
   - "{{ qbittorrent_docker_port_ui }}:{{ qbittorrent_docker_port_ui }}"
   - "{{ qbittorrent_docker_port }}:{{ qbittorrent_docker_port }}"
   - "{{ qbittorrent_docker_port_udp }}:{{ qbittorrent_docker_port_udp }}/udp"
@@ -22,6 +22,8 @@ gluetun_vpn_wireguard_private_key: 6H1t+cNq4Bct1A5ZMPG2ZmFILBUeYzYH2ohgHq1p9l4=
 arr_stack_use_vpn_routing: true
 arr_stack_vpn_container_name: "{{ gluetun_docker_container_name }}"
 arr_stack_host_shared_data_dir: "{{ base_storage_mount_point }}/media"
+arr_stack_media_user_puid: 2000
+arr_stack_media_user_pgid: 2000
 
 ## arr stack - radarr variable
 arr_stack_radarr_enabled: true
@@ -41,8 +43,8 @@ qbittorrent_docker_port_ui: 8081
 qbittorrent_docker_port: 6881
 qbittorrent_docker_port_udp: 6881
 
-## arr stack - jellyseer variable
-arr_stack_jellyseer_enabled: true
+## arr stack - jellyseerr variable
+arr_stack_jellyseerr_enabled: true
 
 ## arr stack - jellyfin variable
 arr_stack_jellyfin_enabled: true
