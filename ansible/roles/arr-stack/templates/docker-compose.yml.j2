@@ -64,7 +64,7 @@ services:
     restart: unless-stopped
 {% endif %}
 
-{% if arr_stack_jellyseer_enabled %}
+{% if arr_stack_jellyseerr_enabled %}
   jellyseerr:
     image: "{{ arr_stack_jellyseerr_docker_image }}:{{ arr_stack_jellyseerr_docker_image_version }}"
     container_name: "{{ arr_stack_jellyseerr_docker_container_name }}"
