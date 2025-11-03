@@ -61,6 +61,7 @@ resource "proxmox_vm_qemu" "vm-cloudinit" {
   scsihw           = "virtio-scsi-single"
   vm_state         = "running"
   automatic_reboot = true
+  tablet           = var.tablet
 
   # Cloud-Init configuration
   cicustom   = "user=local:snippets/user-data-${var.name}.yml"
