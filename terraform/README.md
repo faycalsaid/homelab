@@ -1,3 +1,7 @@
+# Table of Contents
+- [Automating Proxmox VM Deployment with Terraform](#automating-proxmox-vm-deployment-with-terraform)
+- [Disaster Recovery: Configure Proxmox for Terraform Provider](#disaster-recovery-configure-proxmox-for-terraform-provider)
+
 # Automating Proxmox VM Deployment with Terraform
 
 This document explains how to use Terraform to provision VMs on Proxmox using the Cloud-Init template created previously.
