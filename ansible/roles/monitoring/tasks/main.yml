@@ -1,0 +1,30 @@
+- name: "Create monitoring directory"
+  ansible.builtin.file:
+    path: "{{ monitoring_directory }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "Template Prometheus configuration file"
+  template:
+    src: "{{ monitoring_prometheus_configuration_file_src_path }}"
+    dest: "{{ __monitoring_prometheus_configuration_file_host_dest_path }}"
+    mode: "0644"
+    owner: root
+    group: root
+  when: monitoring_role == "master"
+
+- name: Render docker-compose file for monitoring
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ __monitoring_compose_path }}"
+    owner: root
+    mode: '0644'
+  register: compose_template
+
+- name: Ensure compose project is up
+  community.docker.docker_compose_v2:
+    project_src: "{{ monitoring_directory }}"
+    state: present
+  when: compose_template.changed

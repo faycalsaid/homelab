@@ -56,3 +56,6 @@ arr_stack_jellyseerr_enabled: true
 
 ## arr stack - jellyfin variable
 arr_stack_jellyfin_enabled: true
+
+# Monitoring stack variables
+monitoring_role: "node"

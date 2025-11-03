@@ -1,0 +1,16 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['{{ hostvars["bastion-01"].ansible_host }}:9090']
+
+  - job_name: 'cadvisor-bastion'
+    static_configs:
+      - targets: ['{{ hostvars["bastion-01"].ansible_host }}:{{ monitoring_cadvisor_host_port }}']
+
+  - job_name: 'cadvisor-media'
+    static_configs:
+      - targets: ['{{ hostvars["media-01"].ansible_host }}:{{ monitoring_cadvisor_host_port }}']
