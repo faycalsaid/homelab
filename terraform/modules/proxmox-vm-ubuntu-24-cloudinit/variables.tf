@@ -12,6 +12,7 @@ variable "network_id" { default = 0 }
 variable "disk_storage" { default = "local-lvm" }
 variable "enable_firewall" { default = false }
 variable "ipconfig0" {}
+variable "tablet" { default = false }
 
 variable "extra_disk_storage" {
   description = "Storage backend for the extra disk (e.g., 'additional-storage')"

@@ -1,3 +1,6 @@
+
+![homelav-v1.drawio.png](homelav-v1.drawio.png)
+
 # Repository structure
 - `ansible/`: Ansible playbooks and roles to configure the homelab services and applications
 - `terraform/`: Terraform configurations to create and manage the Proxmox VMs, networks, and storage
@@ -20,12 +23,19 @@
 
 ## Troubleshooting
 - If you have the error when clongin the repo:
-```
-fatal: could not create work tree dir 'homelab': Permission denied
-```
+    ```
+    fatal: could not create work tree dir 'homelab': Permission denied
+    ```
 First check cloud init status, 
-```bash
-sudo cloud-init status --long
-```
-if it is 'done' then simply run
-Fix permission 
+    ```bash
+    sudo cloud-init status --long
+    ```
+if it is 'done' then simply give ansible user ownership of the home directory
+    ```bash
+    sudo chown -R ansible:ansible /home/ansible
+    ```
+
+# Sources
+- https://registry.terraform.io/providers/Telmate/proxmox/latest/docs
+- https://www.reddit.com/r/homelab/comments/q1m383/a_small_but_useful_tip_for_proxmox_users/
+- 

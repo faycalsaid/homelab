@@ -24,7 +24,7 @@ module "bastion-ubuntu-prod" {
   memory      = 2048
   sockets     = 1
   disk_size   = "16G"
-  ipconfig0   = "ip=192.168.1.153/24,gw=192.168.1.1"
+  ipconfig0   = "ip=192.168.1.151/24,gw=192.168.1.1"
 
   is_ansible_runner   = true
   ansible_public_key  = tls_private_key.ansible.public_key_openssh

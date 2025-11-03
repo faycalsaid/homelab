@@ -2,6 +2,15 @@
 
 This document explains how to prepare Proxmox VE for automated VM deployment using **Cloud-Init templates** and how to **add external storage** for use with VMs or backups.
 
+
+## Table of Contents
+- [Create an Ubuntu Cloud-Init Template](#create-an-ubuntu-cloud-init-template)
+- [Add External Disk as Proxmox Storage](#add-external-disk-as-proxmox-storage)
+- [Troubleshooting](#troubleshooting)
+    - [Your external disk was unplugged or replugged, device name changed](#your-external-disk-was-unplugged-or-replugged-device-name-changed)
+        - [How to confirm this exact issue ?](#how-to-confirm-this-exact-issue-)
+        - [How to fix it ?](#how-to-fix-it-)
+
 # Create an Ubuntu Cloud-Init Template
 
 Cloud images (.img or .qcow2) support automatic provisioning via Cloud-Init. This template will be used as the base for all Terraform-created VMs.
@@ -134,9 +143,49 @@ Store backups or ISO images on it.
 Use it for multiple VMs.
     
 
-   
+# Troubleshooting
 
+## Your external disk was unplugged or replugged, device name changed
 
+### How to confirm this exact issue ?
+Check if two devices are mounted on same folder 
+```bash
+mount | grep additional-storage
+```
+
+❌ BAD (double mount)
+```bash
+/dev/sda1 on /mnt/additional-storage
+/dev/sdd1 on /mnt/additional-storage
+```
+
+✅ GOOD (only one)
+```bash
+/dev/sdd1 on /mnt/additional-storage
+```
+
+### How to fix it ?
+Unmount both layers
+```bash
+umount -f /mnt/additional-storage
+umount -f /dev/sda1 2>/dev/null
+umount -f /dev/sdd1 2>/dev/null
+```
+
+Remove stale kernel mount reference
+```bash
+umount -l /dev/sda1 2>/dev/null
+```
+
+Remount all from fstab
+```bash
+mount -a
+```
+
+You should now have only one device mounted on the folder (✅ Should show only one device now.)
+```bash
+mount | grep additional-storage
+```
 
 
 

@@ -1,59 +1,112 @@
-# Ansible Role: Gluetun
+# Ansible Role: ARR Media Stack
 
-Role to deploy and configure the [Gluetun VPN container](https://github.com/qdm12/gluetun) using Docker.  
-This role creates the container with appropriate VPN settings (WireGuard or OpenVPN) and exposes ports for ARR applications (Radarr, Sonarr, Prowlarr, qBittorrent, etc.).
+Role to deploy and configure the full ARR media automation stack using Docker.
+This role manages and runs Radarr, Sonarr, Prowlarr, qBittorrent, Jellyseerr, Jellyfin, and FlareSolverr.
 
-Optionally, you can configure the VPN provider and WireGuard connection details.
+It supports optional VPN routing by attaching containers to an existing VPN container (e.g., Gluetun).
 
 ## Requirements
 
-- **Docker Engine** and **Docker Compose v2** on the target host
+Docker Engine and Docker Compose v2 installed on the target host
+
+(Optional) A separate VPN container (e.g., Gluetun) if using VPN routing, see the [Gluetun role](../gluetun/README.md) for deployment instructions.
 
 ## Role Variables
 
-These variables define the base container properties used when deploying Gluetun.  
-They include the container name, image repository, and version tag used to pull the Docker image.
+These variables define how the ARR stack containers are deployed, where media/config files are stored, and user permissions for mounted volumes.
 
-### Gluetun Docker container settings
+### VPN routing
+If enabled, all supported containers will use an existing VPN container network namespace. Useful to route torrent traffic through a VPN.
 ```yaml
-gluetun_docker_container_name: gluetun
-gluetun_docker_image: qmcgaw/gluetun
-gluetun_docker_image_version: latest
+arr_stack_use_vpn_routing: false
+arr_stack_vpn_container_name:
+
 ```
 
-### Gluetun Docker container ports
+### Shared settings
 
-These variables expose application ports through the Gluetun container.
-They allow other containers running in network_mode: "container:gluetun" (such as qBittorrent, Sonarr, or Radarr) to be reachable through Gluetun’s network interface.
+Defines host paths and common docker config for all ARR apps.
+
 ```yaml
-gluetun_docker_port_qbittorrent_ui: 8081
-gluetun_docker_port_qbittorrent: 6881
-gluetun_docker_port_qbittorrent_udp: 6881
-gluetun_docker_port_prowlarr: 9696
-gluetun_docker_port_radarr: 7878
-gluetun_docker_port_sonarr: 8989
-gluetun_docker_port_flaresolverr: 8191
+arr_stack_host_dir: /opt/arr-stack
+arr_stack_host_shared_data_dir: /opt/data/media
+arr_stack_container_data_volume_path: /data
+arr_stack_media_user: "media"
+arr_stack_media_user_puid: 1000
+arr_stack_media_user_pgid: 1000
+arr_stack_timezone: "Etc/UTC"
 ```
 
-### Gluetun volume
+### Auto-created directories
 
-This variable defines the directory on the host where Gluetun stores its persistent configuration, runtime state, and WireGuard keys.
-The directory is mounted to /gluetun inside the container, it is also where the docker-compose file will be.
+These directories will be created depending on which services you enable. They store persistent configs and media data.
 ```yaml
 gluetun_directory: /opt/gluetun
 ```
 
-### Gluetun VPN settings
-
-These variables configure the VPN connection for Gluetun.
-You must set them to connect successfully to your VPN provider.
-For now only WireGuard works, specify your private key and assigned address from your provider’s configuration.
+### Radarr (Movies)
 
 ```yaml
-gluetun_vpn_wireguard_addresses:
-gluetun_vpn_service_provider:
-gluetun_vpn_type:
-gluetun_vpn_wireguard_private_key:
+arr_stack_radarr_enabled: false
+arr_stack_radarr_docker_container_name: radarr
+arr_stack_radarr_docker_image: lscr.io/linuxserver/radarr
+arr_stack_radarr_docker_image_version: latest
+arr_stack_radarr_host_configuration_dir: "{{ arr_stack_host_dir }}/radarr/"
+arr_stack_radarr_docker_container_configuration_dir: /config
+arr_stack_radarr_movies_dir: "{{ arr_stack_host_shared_data_dir }}/movies"
+
+```
+
+### Sonarr (TV Shows)
+
+```yaml
+arr_stack_sonarr_enabled: false
+arr_stack_sonarr_docker_container_name: sonarr
+arr_stack_sonarr_docker_image: lscr.io/linuxserver/sonarr
+arr_stack_sonarr_docker_image_version: latest
+```
+
+### Prowlarr (Indexers)
+
+```yaml
+arr_stack_prowlarr_enabled: false
+arr_stack_prowlarr_docker_container_name: prowlarr
+arr_stack_prowlarr_docker_image: lscr.io/linuxserver/prowlarr
+arr_stack_prowlarr_docker_image_version: latest
+```
+
+### FlareSolverr (Captcha Solver)
+```yaml
+arr_stack_flaresolverr_enabled: false
+arr_stack_flaresolverr_docker_container_name: flaresolverr
+arr_stack_flaresolverr_docker_image: ghcr.io/flaresolverr/flaresolverr
+arr_stack_flaresolverr_docker_image_version: latest
+```
+
+### Jellyseerr (Requests UI)
+
+```yaml
+arr_stack_jellyseerr_enabled: false
+arr_stack_jellyseerr_docker_container_name: jellyseerr
+arr_stack_jellyseerr_docker_image: fallenbagel/jellyseerr
+arr_stack_jellyseerr_docker_image_version: latest
+```
+
+### Jellyfin (Media Server)
+```yaml
+arr_stack_jellyfin_enabled: false
+arr_stack_jellyfin_docker_container_name: jellyfin
+arr_stack_jellyfin_docker_image: jellyfin/jellyfin
+arr_stack_jellyfin_docker_image_version: latest
+```
+
+### qBittorrent (Torrent Client)
+
+```yaml
+arr_stack_qbittorrent_enabled: false
+arr_stack_qbittorrent_docker_container_name: qbittorrent
+arr_stack_qbittorrent_docker_image: lscr.io/linuxserver/qbittorrent
+arr_stack_qbittorrent_docker_image_version: latest
 ```
 
 ## Usage
@@ -64,8 +117,8 @@ gluetun_vpn_wireguard_private_key:
 - hosts: media-servers
   become: true
   roles:
-    - role: docker          # your docker install role
-    - role: gluetun
+    - role: docker        # your docker install role
+    - role: arr-stack
 ```
 
 

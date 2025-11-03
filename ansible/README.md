@@ -27,7 +27,7 @@ To run a playbook for example
 But here our VMs are configured to use ssh so just run 
 
 ```bash 
-  ansible-playbook ./playbooks/site.yml
+  ansible-playbook ./playbooks/site.yml --ask-vault-pass
 ```
 
 ### Vault and unvault secrets

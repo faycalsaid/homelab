@@ -1,0 +1,3 @@
+__monitoring_compose_path: "{{ monitoring_directory }}/docker-compose.yml"
+__monitoring_prometheus_configuration_file_host_dest_path: "{{ monitoring_directory }}/prometheus.yaml"
+__monitoring_prometheus_configuration_file_container_path: /etc/prometheus/prometheus.yaml

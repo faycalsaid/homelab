@@ -1,0 +1,44 @@
+services:
+{% if monitoring_role == "master" %}
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "{{ monitoring_grafana_host_port }}:3000"
+    restart: unless-stopped
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - grafana-conf:/etc/grafana
+
+  prometheus:
+    image: docker.io/prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "{{ monitoring_prometheus_host_port }}:9090"
+    command: "--config.file={{ __monitoring_prometheus_configuration_file_container_path }}"
+    volumes:
+      - "{{ __monitoring_prometheus_configuration_file_host_dest_path }}:{{ __monitoring_prometheus_configuration_file_container_path }}:ro"
+      - prometheus-data:/prometheus
+    restart: unless-stopped
+{% endif %}
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: cadvisor
+    ports:
+      - "{{ monitoring_cadvisor_host_port }}:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    privileged: true
+    restart: unless-stopped
+
+volumes:
+  grafana-data:
+  grafana-conf:
+  prometheus-data:

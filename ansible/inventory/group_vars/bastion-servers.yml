@@ -1,0 +1,4 @@
+monitoring_role: "master"
+monitoring_grafana_host_port: 3001
+monitoring_prometheus_host_port: 9090
+monitoring_prometheus_configuration_file_src_path: "{{ inventory_dir }}/files/prometheus-configuration.yml.j2"
