@@ -1,7 +1,14 @@
-- name: Create filesystem if not exists
+- name: Check if filesystem exists on disk
+  command: "blkid {{ base_storage_device }}"
+  register: disk_fs
+  failed_when: false
+  changed_when: false
+
+- name: Create filesystem only if not exists
   filesystem:
     fstype: "{{ __base_storage_filesystem }}"
     dev: "{{ base_storage_device }}"
+  when: disk_fs.stdout == ""
 
 - name: Ensure mount directory exists
   file:

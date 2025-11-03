@@ -1,13 +1,3 @@
-# - name: Load all group vars with Jinja interpolation
-#   hosts: all
-#   gather_facts: false
-#   pre_tasks:
-#     - name: Evaluate all group_vars for this host
-#       include_vars:
-#         dir: "{{ inventory_dir }}/group_vars"
-#         ignore_unknown_extensions: true
-#       tags: always
-
 - name: Load all group vars with Jinja interpolation
   hosts: all
   gather_facts: false

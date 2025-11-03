@@ -23,19 +23,17 @@
 
 ## Troubleshooting
 - If you have the error when clongin the repo:
-```
-fatal: could not create work tree dir 'homelab': Permission denied
-```
+    ```
+    fatal: could not create work tree dir 'homelab': Permission denied
+    ```
 First check cloud init status, 
-```bash
-sudo cloud-init status --long
-```
-if it is 'done' then simply run
-Fix permission 
-
-
-
-
+    ```bash
+    sudo cloud-init status --long
+    ```
+if it is 'done' then simply give ansible user ownership of the home directory
+    ```bash
+    sudo chown -R ansible:ansible /home/ansible
+    ```
 
 # Sources
 - https://registry.terraform.io/providers/Telmate/proxmox/latest/docs
