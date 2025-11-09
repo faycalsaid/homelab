@@ -7,8 +7,8 @@ arr_stack_host_dir: /opt/arr-stack
 arr_stack_host_shared_data_dir: /opt/data/media
 arr_stack_container_data_volume_path: /data
 arr_stack_media_user: "media"
-arr_stack_media_user_puid: 1000
-arr_stack_media_user_pgid: 1000
+arr_stack_media_user_puid: 2000
+arr_stack_media_user_pgid: 2000
 arr_stack_timezone: "Etc/UTC"
 arr_stack_directories: >
   {{
