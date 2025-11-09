@@ -39,7 +39,7 @@ services:
     container_name: "{{ arr_stack_prowlarr_docker_container_name }}"
     environment:
       - PUID={{ arr_stack_media_user_puid | int  }}
-      - PGID="{{ arr_stack_media_user_pgid | int  }}"
+      - PGID={{ arr_stack_media_user_pgid | int  }}
       - TZ="{{ arr_stack_timezone }}"
     volumes:
       - "{{ arr_stack_prowlarr_host_configuration_dir }}:{{ arr_stack_prowlarr_docker_container_configuration_dir }}"
@@ -98,7 +98,7 @@ services:
     container_name: "{{ arr_stack_qbittorrent_docker_container_name }}"
     environment:
       - PUID={{ arr_stack_media_user_puid | int  }}
-      - PGID="{{ arr_stack_media_user_pgid | int  }}"
+      - PGID={{ arr_stack_media_user_pgid | int  }}
       - TZ=Etc/UTC
       - WEBUI_PORT=8081
       - TORRENTING_PORT=6881
