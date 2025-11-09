@@ -1,6 +1,6 @@
-# - name: Load all group vars with Jinja interpolation
-#   hosts: all
-#   gather_facts: false
+cd ..- name: Load all group vars with Jinja interpolation
+  hosts: all
+  gather_facts: false
 #   pre_tasks:
 #     - name: Load all group vars with Jinja interpolation
 #       include_vars:
@@ -14,15 +14,5 @@
   become: true
   roles:
     - role: install-docker
-    - role: monitoring
     - role: homepage
 
-- name: Configure media servers
-  hosts: media-servers
-  become: true
-  roles:
-    - role: base-storage
-    - role: install-docker
-    - role: gluetun
-    - role: arr-stack
-    - role: monitoring

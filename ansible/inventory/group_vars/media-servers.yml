@@ -35,15 +35,15 @@ arr_stack_media_user_pgid: 2000
 
 ## arr stack - radarr variable
 arr_stack_radarr_enabled: true
-radarr_docker_port: 7878
+
 
 ## arr stack - sonarr variable
 arr_stack_sonarr_enabled: true
-sonarr_docker_port: 8989
+
 
 ## arr stack - prowlarr variable
 arr_stack_prowlarr_enabled: true
-prowlarr_docker_port: 9696
+
 
 ## arr stack - qbittorrent variable
 arr_stack_qbittorrent_enabled: true

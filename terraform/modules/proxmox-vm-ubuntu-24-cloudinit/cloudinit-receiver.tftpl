@@ -25,3 +25,7 @@ runcmd:
   - install -d -m 0700 -o ansible -g ansible /home/ansible/.ssh
   - systemctl enable --now qemu-guest-agent
   - timedatectl set-timezone Etc/UTC
+  # Fix ownership of ansible HOME recursively (including previously ssh created files)
+  - chown -R ansible:ansible /home/ansible
+  - chmod 700 /home/ansible/.ssh
+  - chmod 600 /home/ansible/.ssh/*

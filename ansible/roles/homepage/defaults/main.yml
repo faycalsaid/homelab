@@ -1,0 +1,16 @@
+
+homepage_directory: /opt/homepage
+
+
+# Docker container settings
+homepage_docker_image: ghcr.io/gethomepage/homepage
+homepage_docker_image_version: latest
+homepage_host_port: 3000
+
+
+homepage_config_src:
+homepage_config_host_path: "{{ homepage_directory }}/config"
+
+# A comma-separated list of allowed hosts for the homepage application.
+# e.g., "example.com,subdomain.example.com" for custom domains or "" for all hosts
+homepage_allowed_hosts:

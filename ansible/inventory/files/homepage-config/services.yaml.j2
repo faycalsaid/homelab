@@ -1,0 +1,77 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/services/
+
+- Infrastructure:
+    - Proxmox:
+        icon: proxmox.svg
+        href: https://192.168.1.151:8006
+        description: PVE1
+        widget:
+          type: proxmox
+          url: https://192.168.1.151:8006
+          username: api@pam!homepage
+          password: "{{ homepage_config_proxmox_api_user_password | default('changeme') }}"
+
+- Bastion:
+    - Grafana:
+        icon: grafana.svg
+        href: "http://{{ bastion_ip }}:{{ monitoring_grafana_host_port }}"
+        widget:
+            type: grafana
+            version: 2 # optional, default is 1
+            alerts: alertmanager # optional, default is grafana
+            url: "http://{{ bastion_ip }}:{{ monitoring_grafana_host_port }}"
+            username: username
+            password: password
+    - Prometheus:
+        icon: grafana.svg
+        href: "http://{{ bastion_ip }}:{{ monitoring_prometheus_host_port }}"
+        widget:
+            type: prometheus
+            url: "http://{{ bastion_ip }}:{{ monitoring_prometheus_host_port }}"
+
+
+
+- Media VM:
+    - Jellyfin:
+        icon: jellyfin.svg
+        description: Jellyfin
+        href: "http://{{ media_host }}:{{ jellyfin_docker_port }}"
+        widget:
+          type: jellyfin
+          url: "http://{{ media_host }}:{{ jellyfin_docker_port }}"
+          key: "{{ homepage_config_jellyfin_api_user_password | default('changeme')  }}"
+          enableBlocks: true # optional, defaults to false
+          enableNowPlaying: true # optional, defaults to true
+          enableUser: true # optional, defaults to false
+          enableMediaControl: false # optional, defaults to true
+          showEpisodeNumber: true # optional, defaults to false
+          expandOneStreamToTwoRows: false # optional, defaults to true
+    - Radarr:
+        icon: radarr.svg
+        description: PVR, Automates the process of finding, downloading, and managing movies
+        href: "http://{{ media_host }}:{{ radarr_docker_port}}"
+        widget:
+          type: radarr
+          url: "http://{{ media_host }}:{{ radarr_docker_port}}"
+          key: "{{ homepage_config_radarr_api_user_password | default('changeme') }}"
+
+          enableQueue: true # optional, defaults to false
+    - Sonarr:
+        icon: sonarr.svg
+        description: PVR, Automates the process of finding, downloading, and managing movies
+        href: "http://{{ media_host }}:{{ sonarr_docker_port}}"
+        widget:
+          type: sonarr
+          url: "http://{{ media_host }}:{{ sonarr_docker_port}}"
+          key: "{{ homepage_config_sonarr_api_user_password | default('changeme') }}"
+    - Prowlarr:
+        icon: prowlarr.svg
+        description: Indexer manager/proxy
+        href: "http://{{ media_host }}:{{ prowlarr_docker_port}}"
+        widget:
+          type: prowlarr
+          url: "http://{{ media_host }}:{{ prowlarr_docker_port}}"
+          key: "{{ homepage_config_prowlarr_api_user_password | default('changeme') }}"
+          
