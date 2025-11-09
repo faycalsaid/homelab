@@ -15,7 +15,13 @@ This guide will help you to deploy the entire homelab infrastructure and service
 
 - Create the infrastrucutre (VMs, networks, storage) by following the instructions in the terraform disaster recovery readme [here](./terraform/README.md)
 
-- SSH to the bastion vm using the ansible user, pull the homelab repository, and run the ansible playbook from there
+- Run Ansible playbooks to configure the bastion server and other services:
+  - SSH to the bastion vm using the ansible user, clone the homelab repository
+  - Move to the ansible directory and install required collections
+    ```bash
+    ansible-galaxy collection install -r requirements.yml
+    ```
+  - Then run the ansible playbook
     
     ```bash
     ansible-playbook ./playbooks/site.yml --ask-vault-pass
