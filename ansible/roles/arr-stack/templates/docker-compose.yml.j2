@@ -4,8 +4,8 @@ services:
     image: "{{ arr_stack_radarr_docker_image }}:{{ arr_stack_radarr_docker_image_version }}"
     container_name: "{{ arr_stack_radarr_docker_container_name }}"
     environment:
-      - PUID="{{ arr_stack_media_user_puid }}"
-      - PGID="{{ arr_stack_media_user_pgid }}"
+      - PUID={{ arr_stack_media_user_puid | int  }}
+      - PGID={{ arr_stack_media_user_pgid | int  }}
       - TZ="{{ arr_stack_timezone }}"
     volumes:
       - "{{ arr_stack_radarr_host_configuration_dir }}:{{ arr_stack_radarr_docker_container_configuration_dir }}"
@@ -21,8 +21,8 @@ services:
     image: "{{ arr_stack_sonarr_docker_image }}:{{ arr_stack_sonarr_docker_image_version }}"
     container_name: "{{ arr_stack_sonarr_docker_container_name }}"
     environment:
-      - PUID="{{ arr_stack_media_user_puid }}"
-      - PGID="{{ arr_stack_media_user_pgid }}"
+      - PUID={{ arr_stack_media_user_puid | int  }}
+      - PGID={{ arr_stack_media_user_pgid | int  }}
       - TZ="{{ arr_stack_timezone }}"
     volumes:
       - "{{ arr_stack_sonarr_host_configuration_dir }}:{{ arr_stack_sonarr_docker_container_configuration_dir }}"
@@ -38,8 +38,8 @@ services:
     image: "{{ arr_stack_prowlarr_docker_image }}:{{ arr_stack_prowlarr_docker_image_version }}"
     container_name: "{{ arr_stack_prowlarr_docker_container_name }}"
     environment:
-      - PUID="{{ arr_stack_media_user_puid }}"
-      - PGID="{{ arr_stack_media_user_pgid }}"
+      - PUID={{ arr_stack_media_user_puid | int  }}
+      - PGID={{ arr_stack_media_user_pgid | int  }}
       - TZ="{{ arr_stack_timezone }}"
     volumes:
       - "{{ arr_stack_prowlarr_host_configuration_dir }}:{{ arr_stack_prowlarr_docker_container_configuration_dir }}"
@@ -82,7 +82,7 @@ services:
   jellyfin:
     image: "{{ arr_stack_jellyfin_docker_image }}:{{ arr_stack_jellyfin_docker_image_version }}"
     container_name: "{{ arr_stack_jellyfin_docker_container_name }}"
-    user: "{{ arr_stack_media_user_puid }}:{{ arr_stack_media_user_pgid }}"
+    user: {{ arr_stack_media_user_puid | int  }}:{{ arr_stack_media_user_pgid | int  }}
     ports:
       - 8096:8096
     volumes:
@@ -97,8 +97,8 @@ services:
     image: "{{ arr_stack_qbittorrent_docker_image }}:{{ arr_stack_qbittorrent_docker_image_version }}"
     container_name: "{{ arr_stack_qbittorrent_docker_container_name }}"
     environment:
-      - PUID="{{ arr_stack_media_user_puid }}"
-      - PGID="{{ arr_stack_media_user_pgid }}"
+      - PUID={{ arr_stack_media_user_puid | int  }}
+      - PGID={{ arr_stack_media_user_pgid | int  }}
       - TZ=Etc/UTC
       - WEBUI_PORT=8081
       - TORRENTING_PORT=6881

@@ -28,6 +28,11 @@ This guide will help you to deploy the entire homelab infrastructure and service
     ```
 
 - Configure arr applications through UI (The configuration as code is not yet implemented)
+  - Go to homelab page: `http://<bastion-server-ip>:3000`
+  - From there you have access to all the applications (Jellyfin, Radarr, Sonarr, etc)
+  - Configure each application (Jellyfin, Radarr, Sonarr, etc), here is some useful links to help you with the initial configuration:
+    - [arr stack](https://yams.media/config/)
+
 - Generate credentials for all homepage widgets (plex, sonarr, radarr, etc) and put their values in the respective variables in `ansible/group_vars/bastion-servers.yml`
   homepage_config_proxmox_api_user_password
   homepage_config_jellyfin_api_user_password
