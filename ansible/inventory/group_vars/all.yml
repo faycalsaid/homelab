@@ -4,3 +4,11 @@ docker_sudo_users:
   - "{{ server_admin_user }}"
 
 monitoring_cadvisor_host_port: 8098
+
+media_host: '{{ hostvars["media-01"].ansible_host }}'
+bastion_ip: '{{ hostvars["bastion-01"].ansible_host }}'
+
+radarr_docker_port: 7878
+sonarr_docker_port: 8989
+prowlarr_docker_port: 9696
+jellyfin_docker_port: 8096

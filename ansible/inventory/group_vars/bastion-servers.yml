@@ -1,4 +1,29 @@
+---
 monitoring_role: "master"
 monitoring_grafana_host_port: 3001
 monitoring_prometheus_host_port: 9090
 monitoring_prometheus_configuration_file_src_path: "{{ inventory_dir }}/files/prometheus-configuration.yml.j2"
+
+# homepage variables
+homepage_config_src: "{{ inventory_dir }}/files/homepage-config/"
+homepage_host_port: 3000
+homepage_allowed_hosts: "{{ bastion_ip }}:{{ homepage_host_port }}"
+
+# homepage configuration secrets
+homepage_config_proxmox_api_user_password: !vault |
+    $ANSIBLE_VAULT;1.1;AES256
+    66393734613536373137333165396532333131386137393065343064623838376263366534313463
+    3164636335646139636663333761376334383235373465330a653834326432643033333634343734
+    38313233636236393738636162643061313539333332653639613963333863633261363031333830
+    3633383937666633630a333332643930656434353535333031346666306263666565396264663034
+    35346361653533653334316533323566616633356437333635303233326339313631613836343832
+    6337363765346330343261646236393434353132343138333430
+
+homepage_config_jellyfin_api_user_password: ""
+
+homepage_config_radarr_api_user_password: ""
+
+homepage_config_sonarr_api_user_password: ""
+
+homepage_config_prowlarr_api_user_password: ""
+

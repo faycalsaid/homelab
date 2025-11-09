@@ -13,8 +13,8 @@ users:
     groups: [sudo]
     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
     ssh_authorized_keys:
-      - ${ansible_public_key}
       - ${server_admin_public_key}
+      - ${ansible_public_key}
 
 write_files:
   - path: /home/ansible/.ssh/id_ed25519

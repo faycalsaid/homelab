@@ -6,7 +6,9 @@
 - `terraform/`: Terraform configurations to create and manage the Proxmox VMs, networks, and storage
 - `.proxmox/`: Documentation related to Proxmox VM templates and cloud-init setup and configuration
 
-# Disaster Recovery - Bootstrap everything from scratch
+# Bootstrap everything from scratch / Disaster Recovery guide
+
+This guide will help you to deploy the entire homelab infrastructure and services from scratch using terraform and ansible. This is also useful in case of disaster recovery.
 
 ## Prerequisites
 - Proxmox server up and running
@@ -14,12 +16,18 @@
 - Create the infrastrucutre (VMs, networks, storage) by following the instructions in the terraform disaster recovery readme [here](./terraform/README.md)
 
 - SSH to the bastion vm using the ansible user, pull the homelab repository, and run the ansible playbook from there
-
+    
     ```bash
     ansible-playbook ./playbooks/site.yml --ask-vault-pass
     ```
 
 - Configure arr applications through UI (The configuration as code is not yet implemented)
+- Generate credentials for all homepage widgets (plex, sonarr, radarr, etc) and put their values in the respective variables in `ansible/group_vars/bastion-servers.yml`
+  homepage_config_proxmox_api_user_password
+  homepage_config_jellyfin_api_user_password
+  homepage_config_radarr_api_user_password
+  homepage_config_sonarr_api_user_password
+  homepage_config_prowlarr_api_user_password
 
 ## Troubleshooting
 - If you have the error when clongin the repo:

@@ -1,0 +1,2 @@
+__homepage_container_port: 3000
+__homepage_compose_path: "{{ homepage_directory }}/docker-compose.yml"

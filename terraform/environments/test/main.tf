@@ -24,7 +24,7 @@ module "bastion-ubuntu-test" {
   memory      = 2048
   sockets     = 1
   disk_size   = "16G"
-  ipconfig0   = "ip=192.168.1.160/24,gw=192.168.1.1"
+  ipconfig0   = "ip=192.168.1.170/24,gw=192.168.1.1"
 
   is_ansible_runner   = true
   ansible_public_key  = tls_private_key.ansible.public_key_openssh
@@ -45,7 +45,7 @@ module "media-ubuntu-test" {
   memory      = 2048
   sockets     = 1
   disk_size   = "16G"
-  ipconfig0   = "ip=192.168.1.161/24,gw=192.168.1.1"
+  ipconfig0   = "ip=192.168.1.171/24,gw=192.168.1.1"
 
   ansible_public_key = tls_private_key.ansible.public_key_openssh
 

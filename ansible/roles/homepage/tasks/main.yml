@@ -1,0 +1,32 @@
+- name: Create homepage directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ homepage_directory }}"
+    - "{{ homepage_config_host_path }}"
+
+- name: Sync & Template homepage config files
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "{{ homepage_config_host_path }}/{{ item | basename | regex_replace('\\.j2$', '') }}"
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ lookup('ansible.builtin.fileglob', homepage_config_src ~ '/*.j2', wantlist=True) }}"
+
+
+- name: Render docker-compose file for homepage
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ __homepage_compose_path }}"
+    owner: root
+    mode: '0644'
+  register: compose_template
+
+- name: Ensure compose project is up
+  community.docker.docker_compose_v2:
+    project_src: "{{ homepage_directory }}"
+    state: present
+  when: compose_template.changed

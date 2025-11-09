@@ -148,7 +148,7 @@ Use it for multiple VMs.
 ## Your external disk was unplugged or replugged, device name changed
 
 ### How to confirm this exact issue ?
-Check if two devices are mounted on same folder 
+Check if two devices are mounted on same folder (replace additional-storage with your mount folder name)
 ```bash
 mount | grep additional-storage
 ```
