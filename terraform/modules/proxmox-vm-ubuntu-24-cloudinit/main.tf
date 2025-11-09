@@ -2,7 +2,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "Telmate/proxmox"
-      version = "3.0.2-rc04"
+      version = "3.0.2-rc05"
     }
   }
 }
@@ -19,6 +19,7 @@ resource "local_file" "cloud_init_user_data_file" {
   filename = "${path.module}/user-data-${var.name}.cfg"
 }
 
+# Upload cloud-init user-data to Proxmox via SSH (Terraform has no native resource for snippets)
 resource "null_resource" "cloud_init_config_files" {
   # Establish SSH connection to Proxmox VE server to upload the cloud-init snippet
   connection {
@@ -41,6 +42,10 @@ resource "null_resource" "cloud_init_config_files" {
 }
 
 resource "proxmox_vm_qemu" "vm-cloudinit" {
+  timeouts {
+    create = "10m"
+  }
+
   depends_on = [
     null_resource.cloud_init_config_files,
   ]
@@ -59,11 +64,11 @@ resource "proxmox_vm_qemu" "vm-cloudinit" {
   boot             = "order=scsi0"                      # Has to be the same as the OS disk of the template
   clone            = "ubuntu-24.04-cloud-init-template" # The name of the template
   scsihw           = "virtio-scsi-single"
-  vm_state         = "running"
   automatic_reboot = true
   tablet           = var.tablet
 
   # Cloud-Init configuration
+  ci_wait    = 60
   cicustom   = "user=local:snippets/user-data-${var.name}.yml"
   nameserver = "1.1.1.1 8.8.8.8"
   os_type    = "cloud-init"
