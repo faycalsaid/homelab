@@ -1,51 +1,65 @@
-Role to install Docker CE on Ubuntu. Optionally set a specific version number.
+# Ansible Role: Install Docker
 
+This role installs Docker CE on Ubuntu.
 
-Role variables
---------------
+## Table of Contents
+
+-   [Requirements](#requirements)
+-   [Role Variables](#role-variables)
+-   [Dependencies](#dependencies)
+-   [Example Playbook](#example-playbook)
+-   [License](#license)
+
+## Requirements
+
+-   This role is intended for **Ubuntu** distributions.
+
+## Role Variables
+
+### `docker_sudo_users`
+
+A list of usernames to be added to the `docker` group. This allows them to run Docker commands without `sudo`.
 
 ```yaml
 docker_sudo_users: []
 ```
-List of usernames to allow Docker access to non-root users in a way that
-allows you to log all docker commands executed on the host.
-The logs can be found (on Ubuntu) in `/var/log/auth.log`.
+
+### `docker_version`
+
+The Docker CE version to install. You can specify a full version number or use wildcards (`*`) to get the latest version.
 
 ```yaml
 docker_version: "*.*.*"
 ```
 
-Docker CE version. Each asterisk is a can be replaced by a version number
-component. The first is the major version, the second is the minor version
-and the last is the patch version. If any version is left as asterisk,
-that means "the latest version". Examples:
+Examples:
 
-- `26.1.3`: Docker CE 26.1..3
-- `26.1.*`: The latest patch version of Docker CE 26.1.
-- `26.*.*`: The latest minor and patch version of Docker CE 26.
-- `*.*.*`: The latest available version
+-   `26.1.3`: Install Docker CE 26.1.3.
+-   `26.1.*`: Install the latest patch version of Docker CE 26.1.
+-   `*.*.*`: Install the latest available version of Docker CE.
 
-Dependencies
-------------
+## Dependencies
 
-There are no dependencies. This role can be used without depending on other roles.
+There are no dependencies for this role.
 
-Example playbook
-----------------
+## Example Playbook
 
 ```yaml
 - hosts: all
+  become: true
   roles:
-    - role: docker
-      docker_sudo_users:
-        - manager
-        - john
-      docker_version: "26.1.*"
+    - role: install-docker
+      vars:
+        docker_sudo_users:
+          - manager
+          - john
+        docker_version: "26.1.*"
 ```
 
-License
--------
+## License
 
 MIT License
 
-Source: https://docs.docker.com/engine/install/ubuntu/
+## Source
+
+-   [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)

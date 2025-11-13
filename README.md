@@ -1,60 +1,65 @@
-
 ![homelav-v1.drawio.png](homelav-v1.drawio.png)
 
-# Repository structure
-- `ansible/`: Ansible playbooks and roles to configure the homelab services and applications
-- `terraform/`: Terraform configurations to create and manage the Proxmox VMs, networks, and storage
-- `.proxmox/`: Documentation related to Proxmox VM templates and cloud-init setup and configuration
+# Homelab
 
-# Bootstrap everything from scratch / Disaster Recovery guide
+This repository contains the infrastructure as code (IaC) to deploy and manage a personal homelab. It uses Terraform to provision virtual machines on Proxmox and Ansible to configure the services and applications.
 
-This guide will help you to deploy the entire homelab infrastructure and services from scratch using terraform and ansible. This is also useful in case of disaster recovery.
+## Repository Structure
 
-## Prerequisites
-- Proxmox server up and running
+```
+.
+├── ansible/
+│   ├── roles/
+│   │   ├── arr-stack/
+│   │   ├── base-storage/
+│   │   ├── gluetun/
+│   │   ├── homepage/
+│   │   ├── install-docker/
+│   │   └── monitoring/
+│   ├── inventory/
+│   ├── playbooks/
+│   └── ...
+├── proxmox/
+│   └── README-Proxmox.md
+└── terraform/
+    ├── environments/
+    │   ├── prod/
+    │   └── test/
+    └── modules/
+        └── proxmox-vm-ubuntu-24-cloudinit/
+```
 
-- Create the infrastrucutre (VMs, networks, storage) by following the instructions in the terraform disaster recovery readme [here](./terraform/README.md)
+-   `ansible/`: Contains Ansible playbooks and roles for configuration management.
+    -   `roles/`: Each role is responsible for a specific service (e.g., `arr-stack`, `monitoring`). See the README in each role's directory for more details.
+-   `terraform/`: Contains Terraform configurations for infrastructure provisioning.
+    -   `modules/`: Reusable Terraform modules (e.g., for creating a Proxmox VM).
+    -   `environments/`: Environment-specific configurations (e.g., `prod`, `test`).
+-   `proxmox/`: Documentation related to Proxmox setup and VM templates.
 
-- Run Ansible playbooks to configure the bastion server and other services:
-  - SSH to the bastion vm using the ansible user, clone the homelab repository
-  - Move to the ansible directory and install required collections
-    ```bash
-    ansible-galaxy collection install -r requirements.yml
-    ```
-  - Then run the ansible playbook
-    
-    ```bash
-    ansible-playbook ./playbooks/site.yml --ask-vault-pass
-    ```
+## Getting Started
 
-- Configure arr applications through UI (The configuration as code is not yet implemented)
-  - Go to homelab page: `http://<bastion-server-ip>:3000`
-  - From there you have access to all the applications (Jellyfin, Radarr, Sonarr, etc)
-  - Configure each application (Jellyfin, Radarr, Sonarr, etc), here is some useful links to help you with the initial configuration:
-    - [arr stack](https://yams.media/config/)
+This guide will help you to deploy the entire homelab infrastructure and services from scratch.
 
-- Generate credentials for all homepage widgets (plex, sonarr, radarr, etc) and put their values in the respective variables in `ansible/group_vars/bastion-servers.yml`
-  homepage_config_proxmox_api_user_password
-  homepage_config_jellyfin_api_user_password
-  homepage_config_radarr_api_user_password
-  homepage_config_sonarr_api_user_password
-  homepage_config_prowlarr_api_user_password
+### 1. Prerequisites
 
-## Troubleshooting
-- If you have the error when clongin the repo:
-    ```
-    fatal: could not create work tree dir 'homelab': Permission denied
-    ```
-First check cloud init status, 
-    ```bash
-    sudo cloud-init status --long
-    ```
-if it is 'done' then simply give ansible user ownership of the home directory
-    ```bash
-    sudo chown -R ansible:ansible /home/ansible
-    ```
+-   A Proxmox server up and running.
+-   A Cloud-Init template configured on Proxmox. See the [Proxmox README](./proxmox/README-Proxmox.md) for instructions.
 
-# Sources
-- https://registry.terraform.io/providers/Telmate/proxmox/latest/docs
-- https://www.reddit.com/r/homelab/comments/q1m383/a_small_but_useful_tip_for_proxmox_users/
-- 
+### 2. Infrastructure Deployment
+
+Use Terraform to create the virtual machines, networks, and storage. See the [Terraform README](./terraform/README.md) for detailed instructions on how to set up the provider and deploy the infrastructure.
+
+### 3. Configuration Management
+
+Use Ansible to configure the services and applications on the provisioned VMs. See the [Ansible README](./ansible/README.md) for instructions on how to run the playbooks.
+
+## Services
+
+The following services are managed by this repository:
+
+-   **Arr stack**: Radarr, Sonarr, Prowlarr, qBittorrent, Jellyseerr, Jellyfin, and FlareSolverr.
+-   **Monitoring**: Prometheus, Grafana, and cAdvisor.
+-   **Homepage**: A simple and clean homepage to access all your services.
+-   **Gluetun**: A VPN client container to route traffic through a VPN.
+
+For more details on each service, see the corresponding Ansible role's README.

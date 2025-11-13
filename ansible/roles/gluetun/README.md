@@ -1,30 +1,39 @@
 # Ansible Role: Gluetun
 
-Role to deploy and configure the [Gluetun VPN container](https://github.com/qdm12/gluetun) using Docker.  
-This role creates the container with appropriate VPN settings (WireGuard or OpenVPN) and exposes ports for ARR applications (Radarr, Sonarr, Prowlarr, qBittorrent, etc.).
+This role deploys and configures the [Gluetun VPN container](https://github.com/qdm12/gluetun) using Docker.
 
-Optionally, you can configure the VPN provider and WireGuard connection details.
+This role creates the container with the appropriate VPN settings and exposes ports for other services (e.g., the ARR stack).
+
+## Table of Contents
+
+-   [Requirements](#requirements)
+-   [Role Variables](#role-variables)
+    -   [Container Settings](#container-settings)
+    -   [Exposed Ports](#exposed-ports)
+    -   [Volume](#volume)
+    -   [VPN Settings](#vpn-settings)
+-   [Usage](#usage)
 
 ## Requirements
 
-- **Docker Engine** and **Docker Compose v2** on the target host
+-   Docker Engine and Docker Compose v2 on the target host.
 
 ## Role Variables
 
-These variables define the base container properties used when deploying Gluetun.  
-They include the container name, image repository, and version tag used to pull the Docker image.
+### Container Settings
 
-### Gluetun Docker container settings
+These variables define the base container properties used when deploying Gluetun.
+
 ```yaml
 gluetun_docker_container_name: gluetun
 gluetun_docker_image: qmcgaw/gluetun
 gluetun_docker_image_version: latest
 ```
 
-### Gluetun Docker container ports
+### Exposed Ports
 
-These variables expose application ports through the Gluetun container.
-They allow other containers running in network_mode: "container:gluetun" (such as qBittorrent, Sonarr, or Radarr) to be reachable through Gluetun’s network interface.
+These variables expose application ports through the Gluetun container. They allow other containers running in the same network namespace (e.g., `network_mode: "container:gluetun"`) to be reachable through Gluetun’s network interface.
+
 ```yaml
 gluetun_docker_port_qbittorrent_ui: 8081
 gluetun_docker_port_qbittorrent: 6881
@@ -35,37 +44,37 @@ gluetun_docker_port_sonarr: 8989
 gluetun_docker_port_flaresolverr: 8191
 ```
 
-### Gluetun volume
+### Volume
 
-This variable defines the directory on the host where Gluetun stores its persistent configuration, runtime state, and WireGuard keys.
-The directory is mounted to /gluetun inside the container, it is also where the docker-compose file will be.
+This variable defines the directory on the host where Gluetun stores its persistent configuration.
+
 ```yaml
 gluetun_directory: /opt/gluetun
 ```
 
-### Gluetun VPN settings
+### VPN Settings
 
-These variables configure the VPN connection for Gluetun.
-You must set them to connect successfully to your VPN provider.
-For now only WireGuard works, specify your private key and assigned address from your provider’s configuration.
+These variables configure the VPN connection for Gluetun. You must set them to connect successfully to your VPN provider.
+
+This role supports both WireGuard and OpenVPN. See the [Gluetun documentation](https://github.com/qdm12/gluetun/wiki) for a list of supported providers and their specific settings.
 
 ```yaml
-gluetun_vpn_wireguard_addresses:
 gluetun_vpn_service_provider:
-gluetun_vpn_type:
-gluetun_vpn_wireguard_private_key:
+gluetun_vpn_type: openvpn # or wireguard
+gluetun_openvpn_user:
+gluetun_openvpn_password:
+gluetun_wireguard_private_key:
+gluetun_wireguard_addresses:
 ```
 
 ## Usage
 
-### Minimal playbook
+### Minimal Playbook
 
 ```yaml
 - hosts: media-servers
   become: true
   roles:
-    - role: docker          # your docker install role
+    - role: install-docker
     - role: gluetun
 ```
-
-

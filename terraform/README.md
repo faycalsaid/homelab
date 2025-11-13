@@ -1,101 +1,101 @@
-# Table of Contents
-- [Automating Proxmox VM Deployment with Terraform](#automating-proxmox-vm-deployment-with-terraform)
-- [Disaster Recovery: Configure Proxmox for Terraform Provider](#disaster-recovery-configure-proxmox-for-terraform-provider)
+# Terraform for Proxmox
 
-# Automating Proxmox VM Deployment with Terraform
+This directory contains Terraform configurations to create and manage the Proxmox VMs, networks, and storage.
 
-This document explains how to use Terraform to provision VMs on Proxmox using the Cloud-Init template created previously.
+## Directory Structure
 
-**Prerequisites:** You must first set up Proxmox with a Cloud-Init template and optional external storage as described in
-[README-Proxmox.md](https://github.com/faycalsaid/homelab/blob/e39d4cbc7accd2daa5890476dc8184207473a2c9/proxmox/README-Proxmox.mds)
-Without that step, Terraform cannot clone VMs automatically.
+-   `environments/`: Contains the environment-specific configurations (e.g., `prod`, `test`).
+-   `modules/`: Contains reusable Terraform modules (e.g., for creating a Proxmox VM).
 
-1. Initialize Your Terraform Project
-   Run the following commands from the directory containing your .tf files:
-```bash
-   terraform init          # Downloads Proxmox provider and initializes backend
-   terraform validate      # Checks syntax and variables
-```
+## Getting Started
 
-2. Plan before applying
-    * Always run `terraform plan` to preview changes before applying them
-    * To focus on a specific VM, use the `-target` flag, e.g., to plan only the bastion VM:
+This guide explains how to use Terraform to provision VMs on Proxmox.
+
+### Prerequisites
+
+-   You must first set up Proxmox with a Cloud-Init template. See the [Proxmox README](../proxmox/README-Proxmox.md) for instructions.
+-   Create a `terraform.tfvars` file in the desired environment directory (e.g., `environments/prod/`). You can use `terraform.tfvars.example` as a template.
+
+### Deploying the Infrastructure
+
+1.  **Initialize the Terraform project:**
+
+    Run the following commands from the environment directory (e.g., `environments/prod/`):
+
     ```bash
-    terraform plan -target=proxmox_vm_qemu.bastion
+    terraform init
+    terraform validate
     ```
-   
-3. Apply the Configuration
-   ```bash
-   terraform apply
-   ```
 
-# Disaster Recovery: Configure Proxmox for Terraform Provider
+2.  **Plan and apply the configuration:**
 
-## Create a Proxmox API User with Required Privileges [Source](https://registry.terraform.io/providers/Telmate/proxmox/latest/docs#creating-the-proxmox-user-and-role-for-terraform)
-```bash 
-  pveum role add TerraformProv -privs "Datastore.AllocateSpace Datastore.AllocateTemplate Datastore.Audit Pool.Allocate Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt SDN.Use"
-  pveum user add terraform-prov@pve --password <password>
-  pveum aclmod / -user terraform-prov@pve -role TerraformProv
+    Always run `terraform plan` to preview changes before applying them.
+
+    ```bash
+    terraform plan
+    terraform apply
+    ```
+
+    To target a specific resource, use the `-target` flag. For example, to plan only the bastion VM:
+
+    ```bash
+    terraform plan -target=module.bastion_vm.proxmox_vm_qemu.vm
+    ```
+
+## Disaster Recovery
+
+In case of a disaster, you need to configure Proxmox to allow the Terraform provider to create and manage resources.
+
+### 1. Create a Proxmox API User
+
+Create a Proxmox user with the required privileges for Terraform.
+
+```bash
+pveum role add TerraformProv -privs "Datastore.AllocateSpace Datastore.AllocateTemplate Datastore.Audit Pool.Allocate Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt SDN.Use"
+pveum user add terraform-prov@pve --password <password>
+pveum aclmod / -user terraform-prov@pve -role TerraformProv
 ```
 
-## Create a Linux User for Snippets Upload
-```bash 
+### 2. Create a Linux User for Snippets Upload
+
+Create a Linux user on the Proxmox host to upload Cloud-Init snippets.
+
+```bash
 sudo adduser terraform-ssh
 chown -R root:www-data /var/lib/vz/snippets
 chmod 775 /var/lib/vz/snippets
 usermod -aG www-data terraform-ssh
 ```
 
-## Create VMs with Terraform
+### 3. Set Environment Variables
 
-* Go to your terraform directory , and create environment variables for Proxmox provider authentication, run the following commands in your shell (adjust values as needed):
-```bash 
+Set the following environment variables for Proxmox provider authentication:
+
+```bash
 export PM_USER="terraform-prov@pve"
 export PM_PASS="<password>"
 ```
 
-* Create a terraform.tfvars file with the following content (adjust values as needed), **the pve user here is the linux user created previously** to interact with Proxmox VE snippets storage
-```hcl
-pve_host     = "your.proxmox.ve.ip.or.hostname"
-pve_user     = "terraform-ssh"
-pve_password = "password-of-terraform-ssh-user"
+## Importing Existing Infrastructure
 
-server_admin_public_key    = "your-ssh-public-key"
-```
-pve_user is the Linux user used to upload Cloud-Init snippets and interact with storage.
+If you have existing VMs that you want to manage with Terraform, you can import them.
 
-* Run the following commands to initialize, validate, plan, and apply your Terraform configuration:
+To import a VM, use the `terraform import` command. The syntax is:
+
 ```bash
-terraform init
-terraform validate
-terraform plan
-terraform apply
+terraform import <terraform_resource_address> <proxmox_vm_id>
 ```
 
+For example, to import a VM with ID `100` into the `media_vm` module:
 
-# If you already have an existing VM and just want to see what Terraform thinks it is:
-
-If using directly the provider, the syntax is:
 ```bash
-terraform import proxmox_vm_qemu.<ressource_name> pve/qemu/<ressource_id_on_proxmox>
+terraform import module.media_vm.proxmox_vm_qemu.vm 100
 ```
-example: 
+
+After importing, run `terraform plan` to see the difference between the imported resource and the configuration.
+
+To get the configuration of an existing VM in JSON format, you can use `pvesh`:
+
 ```bash
-terraform import proxmox_vm_qemu.media_vm pve/qemu/100
+pvesh get /nodes/pve/qemu/100/config --output-format json-pretty
 ```
-
-Since we're using our custom module, the syntax is slightly different:
-```bash
-terraform import module.media_vm.proxmox_vm_qemu.<ressource_name> pve/qemu/<ressource_id_on_proxmox>
-```
-example:
-```bash
-terraform import module.media_vm.proxmox_vm_qemu.vm pve/qemu/100
-```
-
-Then run `terraform plan` plan to see what terraform thinks of the existing VM
-
-
-If you want to "terraformise" your exisitng homelab you can get actual configuration in JSON and then create the terraform files based on that.
-
-example: `pvesh get /nodes/pve/qemu/100/config --output-format json-pretty`

@@ -1,54 +1,58 @@
 # Ansible
 
+This directory contains Ansible playbooks and roles to configure the homelab services and applications.
+
+## Directory Structure
+
+-   `inventory/`: Contains the inventory files, group variables, and host variables.
+-   `playbooks/`: Contains the main playbooks to be executed.
+-   `roles/`: Contains the roles that are used by the playbooks.
+-   `requirements.yml`: Contains the required Ansible collections.
+
 ## Developer Guide
 
-Install ansible-core
+### Prerequisites
 
-```bash pip install --upgrade ansible-core```
-
-Install required collections, and if you add any new collection add it to requirements.yml
+Install `ansible-core` and the required collections:
 
 ```bash
+pip install --upgrade ansible-core
 ansible-galaxy collection install -r requirements.yml
 ```
 
-to test for example saying you have a VM part of ubuntu group with IP or domain name defined in your hosts file
+### Running Playbooks
 
-Test this command if you want to ping the VM
+To run the main playbook that configures all the services, use the following command:
 
-ansible -i ./inventory/hosts ubuntu -m ping --user someuser --ask-pass
-
-To run a playbook for example
-
-```bash 
-  ansible-playbook ./playbooks/docker.yml --user someuser --ask-pass --ask-become-pass -i ./inventory/hosts 
-```
-
-But here our VMs are configured to use ssh so just run 
-
-```bash 
-  ansible-playbook ./playbooks/site.yml --ask-vault-pass
-```
-
-### Vault and unvault secrets
-To encrypt secrets use ansible-vault
 ```bash
-ansible-vault encrypt_string --ask-vault-pass "some string" --name property_name
+ansible-playbook ./playbooks/site.yml --ask-vault-pass
 ```
 
+To run a specific playbook, for example `docker.yml`:
 
-## 🧩 Special Notes
+```bash
+ansible-playbook ./playbooks/docker.yml
+```
 
-Although this repository follows standard Ansible conventions for group_vars and host_vars,
-YAML files in those directories are not Jinja-evaluated by default.
+### Managing Secrets with Vault
 
-To enable variable interpolation (e.g. referencing one variable from another) inside inventory variable files,
-a small pre-task is added in the playbooks to explicitly load and render them as templates.
-This ensures that all variables are properly evaluated and reusable throughout the playbook and roles.
+To encrypt secrets, use `ansible-vault`. For example, to encrypt a string:
+
+```bash
+ansible-vault encrypt_string --ask-vault-pass "your-secret-string" --name "your_property_name"
+```
+
+## Special Notes
+
+### Jinja Evaluation in Inventory Files
+
+Although this repository follows standard Ansible conventions for `group_vars` and `host_vars`, YAML files in those directories are not Jinja-evaluated by default.
+
+To enable variable interpolation (e.g., referencing one variable from another) inside inventory variable files, a small pre-task is added in the playbooks to explicitly load and render them as templates. This ensures that all variables are properly evaluated and reusable throughout the playbook and roles.
 
 ```yaml
-  pre_tasks:
-    - name: Load evaluated group vars (to resolve Jinja expressions)
-      include_vars:
-        file: "/group_vars/media-servers.yml"
+pre_tasks:
+  - name: Load evaluated group vars (to resolve Jinja expressions)
+    include_vars:
+      file: "/group_vars/media-servers.yml"
 ```
