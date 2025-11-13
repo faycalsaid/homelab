@@ -74,4 +74,15 @@
           type: prowlarr
           url: "http://{{ media_host }}:{{ prowlarr_docker_port}}"
           key: "{{ homepage_config_prowlarr_api_user_password | default('changeme') }}"
+    - qbittorrent:
+        icon: qbittorrent.svg
+        description: qbittorrent
+        href: "http://{{ media_host }}:{{ qbittorrent_docker_port_ui}}"
+        widget:
+          type: qbittorrent
+          url: "http://{{ media_host }}:{{ qbittorrent_docker_port_ui}}"
+          username: admin
+          password: "{{ homepage_config_qbittorrent_api_user_password | default('changeme') }}"
+          enableLeechProgress: true # optional, defaults to false
+          enableLeechSize: true # optional, defaults to false
           

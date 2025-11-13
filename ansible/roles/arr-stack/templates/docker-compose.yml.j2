@@ -105,6 +105,8 @@ services:
     volumes:
       - /opt/qbittorrent:/config
       - /opt/data/torrents:/data/torrents
-    network_mode: "container:gluetun"
+{% if arr_stack_use_vpn_routing %}
+    network_mode: "container:{{ arr_stack_vpn_container_name }}"
+{% endif %}
     restart: unless-stopped
 {% endif %}
