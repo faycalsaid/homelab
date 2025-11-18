@@ -1,13 +1,12 @@
-# - name: Load all group vars with Jinja interpolation
-#   hosts: all
-#   gather_facts: false
-#   pre_tasks:
-#     - name: Load all group vars with Jinja interpolation
-#       include_vars:
-#         file: "{{ inventory_dir }}/group_vars/{{ item }}.yml"
-#       loop: "{{ group_names }}"
-#       tags: always
-
+- name: Load all group vars with Jinja interpolation
+  hosts: all
+  gather_facts: false
+  pre_tasks:
+    - name: Load all group vars with Jinja interpolation
+      include_vars:
+        file: "{{ inventory_dir }}/group_vars/{{ item }}.yml"
+      loop: "{{ group_names }}"
+      tags: always
 
 - name: Configure bastion servers
   hosts: bastion-servers
